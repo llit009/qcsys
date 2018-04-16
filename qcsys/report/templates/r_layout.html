@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>UV QC</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('report.static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('report.static', filename='css/style.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('report.static', filename='css/jquery-ui.min.css')}}">
+    <script src="{{ url_for('report.static', filename='js/moment.js')}}" ></script>
+    <script src="{{ url_for('report.static', filename='js/Chart.js')}}" ></script>
+    <script src="{{ url_for('report.static', filename='js/Chart.PieceLabel.js')}}" ></script>
+</head>
+<body>
+
+    {% include 'r_includes/_navbar.html' %}
+    <div class="container-fluid">
+        <div class="row">
+           <div class="col align-self-center">
+            {% include 'r_includes/_messages.html' %}
+            {% block body %}
+            {% endblock %}
+           </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js')}}" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}" ></script>
+    <script src="{{ url_for('report.static', filename='js/sidebar.js')}}" ></script>
+    <script src="{{ url_for('static', filename='js/jquery-ui.min.js')}}" ></script>
+    <script src="{{ url_for('report.static', filename='js/ajax.js')}}" ></script>
+    <script src="{{ url_for('report.static', filename='js/utility.js')}}" ></script>
+    <script src="{{ url_for('report.static', filename='js/qc-chart.js')}}" ></script>
+</body>
+</html>

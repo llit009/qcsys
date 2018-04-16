@@ -1,0 +1,104 @@
+{% extends 'r_layout.html'%}
+{% block body %}
+<div class="container pt-5">
+    <!-- 案例报告部分-->
+  <h1 class="text-center rp_title">案例报告中心</h1>
+ <div class="jumbotron rp_reports_bg h-100">
+  <div class="row justify-content-md-center">
+   <div class="col-sm-3 col-lg-3 ">
+     <div class="rp_panel rp_panel_success">
+      <div class="rp_ago">
+       <h4 class="text-center">各部门投诉简报</h4>
+       <hr>
+       <a href="reportdept" class="rp_panel_link pull-right">查看</a>
+      </div>
+     </div>
+   </div>
+
+   <div class="col-sm-3 col-lg-3">
+     <div class="rp_panel rp_panel_purple">
+      <div class="rp_ago">
+       <h4 class="text-center">代理商投诉简报</h4>
+       <hr>
+       <a href="reportagent" class="rp_panel_link pull-right">查看</a>
+      </div>
+     </div>
+   </div>
+
+  </div>
+
+  <div class="row justify-content-md-center">
+    <div class="col-sm-3 col-lg-3 ">
+      <div class="rp_panel rp_panel_info">
+       <div class="rp_ago">
+        <h4 class="text-center">综合统计简报</h4>
+        <hr>
+        <a href="generalreport" class="rp_panel_link pull-right">查看</a>
+       </div>
+      </div>
+    </div>
+
+    <div class="col-sm-3 col-lg-3">
+      <div class="rp_panel rp_panel_warning">
+       <div class="rp_ago">
+        <h4 class="text-center">Coming</h4>
+         <hr>
+         <a href="#" class="rp_panel_link pull-right">coming soon</a>
+       </div>
+      </div>
+    </div>
+
+   </div>
+ </div>
+
+    <!-- 统计图表部分-->
+    <h1 class="text-center rp_title">案例统计图表</h1>
+ <div class="jumbotron rp_reports_bg h-100">
+  <div class="row justify-content-md-center">
+   <div class="col-sm-3 col-lg-3 ">
+     <div class="rp_panel rp_panel_success">
+      <div class="rp_ago">
+       <h4 class="text-center">各部门和代理统计</h4>
+       <hr>
+       <a href="charts_statistics" class="rp_panel_link pull-right">查看</a>
+      </div>
+     </div>
+   </div>
+
+   <div class="col-sm-3 col-lg-3">
+     <div class="rp_panel rp_panel_purple">
+      <div class="rp_ago">
+       <h4 class="text-center">综合图表</h4>
+       <hr>
+       <a href="general_statistics" class="rp_panel_link pull-right">查看</a>
+      </div>
+     </div>
+   </div>
+
+  </div>
+
+  <div class="row justify-content-md-center">
+    <div class="col-sm-3 col-lg-3 ">
+      <div class="rp_panel rp_panel_info">
+       <div class="rp_ago">
+        <h4 class="text-center">Coming Soon</h4>
+        <hr>
+        <a href="#" class="rp_panel_link pull-right">Coming Soon</a>
+       </div>
+      </div>
+    </div>
+
+    <div class="col-sm-3 col-lg-3">
+      <div class="rp_panel rp_panel_warning">
+       <div class="rp_ago">
+        <h4 class="text-center">Coming Soon</h4>
+         <hr>
+         <a href="#" class="rp_panel_link pull-right">Coming Soon</a>
+       </div>
+      </div>
+    </div>
+
+   </div>
+ </div>
+</div>
+{% endblock %}

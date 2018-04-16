@@ -1,0 +1,185 @@
+{% extends 'layout.html'%}
+
+{% block body %}
+<div class="blog-header">
+  <div class="container">
+    <h1 class="blog-title">案例详情</h1>
+    <p class="lead blog-description">投诉案例 <strong> # {{qc_num}}</strong> 详细信息</p>
+  </div>
+</div>
+<hr class="my-4">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-10 blog-main">
+            <div class=""><a href="/admin/caselist" class="btn btn-secondary btn-block"><strong>返回</strong></a></div>
+            <br>
+            {% if basic and order %}
+            <div class="blog-post detail_section_cl">
+                <h3 class="blog-post-title font-weight-bold"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> 投诉信息</h3>
+                <p class="blog-post-meta bg-primary text-white font-weight-bold">基本信息 和 订单信息 </p>
+                <hr class="my-2">
+                <h5><strong><li>基本信息</li></strong></h5>
+                <p class="d-inline"><strong>投诉来源：</strong><pre class="d-inline-flex"> {{ {"phone_a": "代理致电", "email_a": "代理发邮件", "phone_c": "客人致电", "email_c": "客人发邮件", "phone_e": "内部同事致电", "email_e": "内部同事发邮件", "wechat": "微信投诉"}[basic.source] | default("默认") }}</pre></p>
+                <p class="d-inline"><strong>来源信息：</strong><pre class="d-inline-flex detail_pre_wrap"> {{ basic.source_subject}}</pre></p>
+                <p class="d-inline"><strong>投诉内容：</strong><pre class="d-inline-flex detail_pre_wrap"> {{ basic.content}}</pre></p>
+                <p class="d-inline"><strong>调查结果：</strong><pre class="d-inline-flex detail_pre_wrap"> {{ basic.ivsg_result}}</pre></p>
+                <p class="d-inline"><strong>目前状态：</strong><pre class="d-inline-flex detail_pre_wrap text-danger"> {{ {"processing": "处理中", "new": "新投诉", "w_response": "等待回复", "w_confirm": "等待确认", "w_email": "等待邮件", "report": "反映情况", "solved": "已解决", "cancel": "投诉取消", "terminated": "投诉终止"}[basic.status] | default("New") }}</pre></p>
+                <p class="d-inline"><strong>创建时间和创建人：</strong><pre class="d-inline-flex detail_pre_wrap"> {{ basic.creat_date}} / {{ basic.creator}}</pre></p>
+                <br>
+                <h5><strong><li>订单信息</li></strong></h5>
+                <table class="table table-sm table-bordered table-dark">
+                  <thead>
+                    <tr>
+                      <th scope="col">Invoice#</th>
+                      <th scope="col" class="text-nowrap">订单号</th>
+                      <th scope="col" class="text-nowrap">出发时间</th>
+                      <th scope="col" class="text-nowrap">团号</th>
+                      <th scope="col" class="text-nowrap">组号</th>
+                      <th scope="col" class="text-nowrap">代理商</th>
+                      <th scope="col" class="text-nowrap">人数</th>
+                      <th scope="col" class="text-nowrap">房间数</th>
+                      <th scope="col" class="text-nowrap">主要导游</th>
+                      <th scope="col" class="text-nowrap">相关人员</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="table-primary">
+                      <th scope="row">{{order.invoice}}</th>
+                      <td>{{order.order_num}}</td>
+                      <td>{{order.departure_date}}</td>
+                      <td>{{order.tour_code}}</td>
+                      <td>{{order.group_code}}</td>
+                      <td>{{order.agent}}</td>
+                      <td>{{order.pax}}</td>
+                      <td>{{order.room_num}}</td>
+                      <td>{{order.tour_guide}}</td>
+                      <td>{{order.staffs}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+            </div><!-- blog post -->
+            {% endif %}
+
+
+            <hr class="my-4">
+            {% if label %}
+            <div class="blog-post detail_section_cl">
+                <h3 class="blog-post-title font-weight-bold"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> 案例分类</h3>
+                <p class="blog-post-meta bg-primary text-white font-weight-bold">部门 和 类别 </p>
+                <hr class="my-2">
+                <table class="table table-sm table-bordered table-dark">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="text-nowrap">所属部门</th>
+                      <th scope="col" class="text-nowrap">所属分类</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for l in label %}
+                    <tr class="table-primary">
+                      <th scope="row">{{l.parent_title}}</th>
+                      <td>{{l.title}}</td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+            </div><!-- blog post -->
+            {% endif %}
+
+
+            <hr class="my-4">
+            {% if comments %}
+            <div class="blog-post detail_section_cl">
+                <h3 class="blog-post-title font-weight-bold"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> 处理过程</h3>
+                <p class="blog-post-meta bg-primary text-white font-weight-bold">回复内容 和 回复人 </p>
+                <hr class="my-2">
+                <table class="table table-sm table-bordered table-dark">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="text-nowrap">回复人</th>
+                      <th scope="col" class="text-nowrap">回复时间</th>
+                      <th scope="col" class="text-nowrap">回复内容</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for c in comments %}
+                    <tr class="table-primary">
+                      <td>{{c.cmt_user}}</td>
+                      <td class="text-nowrap">{{c.cmt_date}}</td>
+                      <td><pre class="detail_pre_wrap"> {{ c.cmt_content}}</pre></td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+            </div><!-- blog post -->
+            {% endif %}
+
+
+
+            <hr class="my-4">
+            {% if results %}
+            <div class="blog-post detail_section_cl">
+                <h3 class="blog-post-title font-weight-bold"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> 处理结果</h3>
+                <p class="blog-post-meta bg-primary text-white font-weight-bold">案件最终处理结果信息</p>
+                <hr class="my-2">
+
+                <p class="d-inline"><strong>责任归属方：</strong><pre class="d-inline-flex"> {{ {"agent": "代理", "uv": "纵横", "customer": "客人","uvc": "纵横和客人", "uva": "纵横和代理", "uvac": "纵横和客人和代理", "other": "第四方", "na": "待输入"}[results.resp_party] | default("待输入") }}</pre></p>
+                <p class="d-inline"><strong>处理依据：</strong><pre class="d-inline-flex"> {{ {"compensation": "赔偿方案", "compensation final": "赔偿方案终极", "more": "多", "less": "少","na": "待输入"}[results.reference] | default("待输入") }}</pre></p>
+                <p class="d-inline"><strong>客户满意度：</strong><pre class="d-inline-flex"> {{ {"acceptance": "接受赔偿", "great": "非常满意", "good": "满意", "displeasure": "不满意", "catastrophic": "非常不满","na": "待输入"}[results.satisfaction] | default("待输入") }}</pre></p>
+                <p class="d-inline"><strong>案件分析：</strong><pre class="d-inline-flex detail_pre_wrap"> {{results.analysis}}</pre></p>
+                <p class="d-inline"><strong>退款方式：</strong><pre class="d-inline-flex"> {{ {"credit": "Credit Memo", "quickpay": "Quickpay", "cb": "中国的银行", "ub": "美国的银行", "check": "支票", "bill": "Billed", "tt": "TT", "rtt": "Refunded By TT", "GRF": "导游退款", "other": "其他", "na": "待输入"}[results.payment] | default("默认") }}</pre></p>
+                <p class="d-inline"><strong>退款信息：</strong><pre class="d-inline-flex detail_pre_wrap"> {{ results.payment_memo}}</pre></p>
+                <p class="d-inline"><strong>退款金额：</strong><pre class="d-inline-flex"> ${{ results.compensation_amount}}</pre></p>
+                <p class="d-inline"><strong>开账单：</strong>
+                    <pre class="d-inline-flex">{{ {"hotel": "酒店部", "trans": "运输部", "guide": "导游部", "ec": "美东部", "local": "local部", "eci": "ECI部", "cruise": "邮轮部", "sales": "销售部", "ticket": "票务部", "mkting": "市场部", "chi": "芝加哥分部", "dc": "华盛顿分部", "orlando": "奥兰多分部",
+                "mia": "迈阿密分部", "sea": "西雅图分部", "texas": "德州分部", "it": "IT部", "acc": "会计部", "spcl": "特殊案例", "na": "待输入", "bos":"波士顿分部", "ap":"接机部"}[results.	bill] | default("待输入") }}
+                    </pre>
+                </p>
+                <p class="d-inline"><strong>账单金额：</strong><pre class="d-inline-flex"> ${{ results.bill_value}}</pre></p>
+                <p class="d-inline"><strong>账单号：</strong><pre class="d-inline-flex"> {{ results.bill_num}}</pre></p>
+
+            </div><!-- blog post -->
+            {% endif %}
+
+            <hr class="my-4">
+            {% if status %}
+            <div class="blog-post detail_section_cl">
+                <h3 class="blog-post-title font-weight-bold"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> 案件状态日志</h3>
+                <p class="blog-post-meta bg-primary text-white font-weight-bold">状态修改过程 和 备注 </p>
+                <hr class="my-2">
+                <table class="table table-sm table-bordered table-dark">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="text-nowrap">状态历史</th>
+                      <th scope="col" class="text-nowrap">修改人</th>
+                      <th scope="col" class="text-nowrap">修改时间</th>
+                      <th scope="col" class="text-nowrap">修改备注</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for s in status %}
+                    <tr class="table-primary">
+                      <th scope="row">{{ {"new": "新投诉", "processing": "处理中", "w_response": "等待回复","w_response": "等待回复", "w_confirm": "等待确认", "w_email": "等待邮件", "report": "反映情况", "solved": "已解决","cancel": "投诉取消", "terminated": "投诉终止"}[s.case_status] | default("默认") }}</th>
+                      <td>{{s.cmt_user}}</td>
+                      <th scope="row">{{s.	cmt_date}}</th>
+                      <td>{{s.cmt_content}}</td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+            </div><!-- blog post -->
+            {% endif %}
+
+            <hr class="my-4">
+            <br>
+            <a href="/admin/caselist" class="btn btn-secondary btn-block"><strong>返回</strong></a>
+            <hr class="my-4">
+            <br>
+
+
+        </div> <!-- blog main -->
+    </div><!-- row -->
+</div><!-- container -->
+
+{% endblock %}

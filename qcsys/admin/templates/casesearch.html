@@ -1,0 +1,141 @@
+{% extends 'layout.html'%}
+
+{% block body %}
+<div>
+<form action="/admin/casesearch" method="post" name="search_case">
+    <div class="input-group margin-bottom-sm">
+        <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
+        <input id="casesearch" class="form-control" type="text" name="search_case" placeholder="输入投诉编号/invoice#/订单号来搜索" value={{request.form.search_case}}>
+        <input type="submit" class="btn btn-primary" value="Search">
+        <a href="/admin/caselist" class="btn btn-warning pull-right">返回案件总列表</a>
+    </div>
+</form>
+</div>
+<hr class="my-3">
+<h3 class="text-primary">投诉案件列表</h3>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">投诉编号</th>
+      <th scope="col">案件状态</th>
+      <th scope="col">创建时间</th>
+      <th scope="col">代理商</th>
+      <th scope="col">Invoice#</th>
+      <th scope="col">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for case in caseinfos %}
+    <tr>
+        <th scope="row"><a href="casedetails/{{case.qc_num}}">{{case.qc_num}}</a></th>
+        <!--<td>{{case.status}}</td>-->
+        <td class="text-danger font-weight-bold">{{ {"processing": "处理中", "new": "新投诉", "w_response": "等待回复", "w_confirm": "等待确认", "w_email": "等待邮件", "report": "反映情况", "solved": "已解决", "cancel": "投诉取消", "terminated": "投诉终止"}[case.status] | default("New") }}</td>
+        <td>{{case.creat_date}}</td>
+        <td>{{case.agent}}</td>
+        <td>{{case.invoice}}</td>
+        <td>
+            <div class="btn-group" role="group">
+                <a href="caselabels/{{case.qc_num}}" class="btn btn-primary">案例归类</a>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#c_status" data-qcID="{{case.qc_num}}">调整状态</button>
+                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#c_processing" data-qcID="{{case.qc_num}}">处理进度</button>
+                <a href="editcase/{{case.qc_num}}" class="btn btn-info">编辑案例</a>
+                <a href="caseresult/{{case.qc_num}}" class="btn btn-success">处理结果</a>
+                <!--<a href="casedetails/{{case.qc_num}}" class="btn btn-secondary">查看详情</a>-->
+                <a href="caseattachment/{{case.qc_num}}" class="btn color_attach">附件管理</a>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+      <li class="page-item"><a class="page-link" href="/admin/casesearch&page=1&{{keyword}}">Frist page</a></li>
+      {% if pages <= 3 %}
+      {% for page in range(pages) %}
+        <li class="page-item"><a class="page-link" href="/admin/casesearch&page={{page + 1}}&{{keyword}}">{{page + 1}}</a></li>
+      {% endfor %}
+      {% else %}
+        <div class="dropdown show" style="padding-right:10px; padding-left:10px;">
+          <a class="btn page-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Go to Page...
+          </a>
+
+          <div class="dropdown-menu scrollable-Drop-menu" aria-labelledby="dropdownMenuLink">
+            {% for page in range(pages) %}
+            <a class="page-link" href="/admin/casesearch&page={{page + 1}}&{{keyword}}">{{page + 1}}</a>
+            {% endfor %}
+          </div>
+        </div>
+
+      {% endif %}
+      <li class="page-item"><a class="page-link" href="/admin/casesearch&page={{pages}}&{{keyword}}">Last page</a></li>
+  </ul>
+</nav>
+
+
+<div class="modal fade" id="c_status" tabindex="-1" role="dialog" aria-labelledby="statusModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-primary" id="statusModal">修改状态</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/changestatus" method="post" name="change_status">
+          <div class="form-group">
+            <label for="status_select" class="col-form-label">请选择投诉状态:</label>
+            <select class="form-control" id="status_select" name="s_status">
+                <option value="processing">处理中</option>
+                <option value="w_response">等待回复</option>
+                <option value="w_confirm">等待确认</option>
+                <option value="w_email">等待邮件</option>
+                <option value="report">反映情况</option>
+                <option value="solved">已解决</option>
+                <option value="cancel">投诉取消</option>
+                <option value="terminated">投诉终止</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="status-message-text" class="col-form-label">修改理由: <spam class="text-danger font-weight-bold">*必填</spam></label>
+            <textarea class="form-control" id="status-message-text" name="s_message_t" required></textarea>
+          </div>
+            <input type="hidden" id="qcid-value" name="s_qc_id" value="null">
+            <input type="hidden" name="s_qc_id" value="null">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">返回</button>
+            <input type="submit" class="btn btn-primary pull-right" value="提交">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="c_processing" tabindex="-1" role="dialog" aria-labelledby="processingModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-primary" id="processingModal">处理进度</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/caseprocessing" method="post" name="change_processing">
+          <div class="form-group">
+            <label for="status-message-text" class="col-form-label">本次处理结果<spam class="text-danger font-weight-bold">*必填</spam></label>
+            <textarea rows="15" class="form-control" id="processing-message-text" name="p_message_t" required></textarea>
+          </div>
+            <input type="hidden" id="qcid-value-p" name="p_qc_id" value="null">
+            <input type="hidden" name="p_qc_id" value="null">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">返回</button>
+            <input type="submit" class="btn btn-primary pull-right" value="提交">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

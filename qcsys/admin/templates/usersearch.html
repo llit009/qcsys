@@ -1,0 +1,80 @@
+{% extends 'layout.html'%}
+
+{% block body %}
+<form action="/admin/searchuser" method="post" name="search_form">
+    <div class="input-group margin-bottom-sm">
+        <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
+        <input id="usersearch" class="form-control" type="text" name="search" placeholder="输入用户名来搜索" value={{request.form.search}}>
+        <input type="submit" class="btn btn-primary" value="Search">
+    </div>
+</form>
+<br>
+<a href="/admin/users" class="btn btn-warning pull-right">返回人员列表</a>
+<h3 class="text-primary">人员信息列表</h3>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">名称</th>
+      <th scope="col">类别</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+        <th scope="row"><a href="#">{{user.name}}</a></th>
+        <td>
+            {{user.type}}
+        </td>
+        <td><a href="edituser/{{user.id}}" class="btn btn-info">编辑</a></td>
+        <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" data-delID="{{user.id}}">停用</button></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+      <li class="page-item"><a class="page-link" href="/admin/searchuser&page=1&{{keyword}}">Frist page</a></li>
+      {% if pages <= 3 %}
+      {% for page in range(pages) %}
+        <li class="page-item"><a class="page-link" href="/admin/searchuser&page={{page + 1}}&{{keyword}}">{{page + 1}}</a></li>
+      {% endfor %}
+      {% else %}
+        <div class="dropdown show" style="padding-right:10px; padding-left:10px;">
+          <a class="btn page-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Go to Page...
+          </a>
+
+          <div class="dropdown-menu scrollable-Drop-menu" aria-labelledby="dropdownMenuLink">
+            {% for page in range(pages) %}
+            <a class="page-link" href="/admin/searchuser&page={{page + 1}}&{{keyword}}">{{page + 1}}</a>
+            {% endfor %}
+          </div>
+        </div>
+
+      {% endif %}
+      <li class="page-item"><a class="page-link" href="/admin/searchuser&page={{pages}}&{{keyword}}">Last page</a></li>
+  </ul>
+</nav>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger" id="exampleModalLabel">警告！</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        真的要删除吗？真的要吗？<br>不要了吧~录入很辛苦的~还是改一改吧~
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">听你的不删</button>
+        <a href="deleteuser/" class="btn btn-danger" id="del_a">狠心删除！</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

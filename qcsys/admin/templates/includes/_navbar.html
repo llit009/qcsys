@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg navbar-dark" style="background:#003366;">
+  <span class="navbar-brand sb-0" ><a class="navbar-brand" href="/admin/">
+    <i class="fa fa-globe fa-lg" aria-hidden="true"></i> QC System </a></span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mb-0 h6" style="margin-left: 20px;">
+      <li class="nav-item">
+        <a class="nav-link" href="/report/"><i class="fa fa-thermometer-full" aria-hidden="true"></i> 统计和报告 </a>
+      </li>
+    </ul>
+
+    <ul class="nav navbar-nav ml-auto">
+      {% if session.logged_in %}
+        <li class="nav-item">
+          <a class="nav-link mb-0 h6" href="{{url_for('logout')}}">Logout <i class="fa fa-sign-out" aria-hidden="true"></i></a>
+        </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link mb-0 h6" href="#">Register</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link mb-0 h6" href="#">Login <i class="fa fa-sign-in" aria-hidden="true"></i></a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

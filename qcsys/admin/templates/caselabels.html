@@ -1,0 +1,89 @@
+{% extends 'layout.html'%}
+
+{% block body %}
+
+{% if labels %}
+    <table class="table table-active">
+        <h4 class="text-primary">已有分类</h4>
+        <thead class="thead-dark">
+            <tr>
+              <th scope="col">部门</th>
+              <th scope="col">标签名</th>
+              <th scope="col">回复范例</th>
+              <th scope="col">Response Example</th>
+              <th scope="col">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for label in labels %}
+            <tr>
+                {% if label.parent_title == 0 %}
+              <td>{{label.title}}</td>
+                {% else %}
+              <td>{{label.parent_title}}</td>
+                {% endif %}
+              <td>{{label.title}}</td>
+              <td><textarea rows="6" cols="58">{{label.comments}}</textarea></td>
+              <td><textarea rows="6" cols="58">{{label.comments_eng}}</textarea></td>
+              <td>
+                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#label_delete" data-qcID="{{label.qc_num}}:{{label.title}}:{{label.parent_title}}">删除</button>
+              </td>
+            </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-info">该案例还未分类，请在下面添加。</p>
+{% endif %}
+<hr class="my-4 style2">
+
+<form action="" method="post">
+    <h4 class="text-primary">添加分类标签</h4>
+    <hr class="my-2">
+
+    <div class="form-group row">
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+          <input type="text" id="item-labels" class="form-control" placeholder="Labels" aria-describedby="basic-addon2">
+          <div class="input-group-append">
+            <button class="btn btn-info" type="button" id="submitbt-labels">添加标签</button>
+          </div>
+        </div>
+        <div class="card " style="width: 45rem;">
+          <div class="card-body" id="labelitems">
+          </div>
+        </div>
+      </div>
+     </div>
+    <hr class="my-5">
+    <div class="form-group row mx-auto">
+    <div class="col-sm-5">
+      <input type="submit" class="btn btn-primary btn-block" value="提交">
+    </div>
+      <div class="col-sm-5">
+          <a href="/admin/caselist" class="btn btn-danger btn-block">返回</a>
+      </div>
+    </div>
+    </form>
+
+<div class="modal fade" id="label_delete" tabindex="-1" role="dialog" aria-labelledby="delete_label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger" id="delete_label">警告！</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        真的要删除吗？真的要吗？大侠手下留情啊！
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">那就不删~</button>
+        <a href="/admin/deletecaselabel/" class="btn btn-danger" id="del_c_label">狠心删除！</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

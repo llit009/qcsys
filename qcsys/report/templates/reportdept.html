@@ -1,0 +1,65 @@
+{% extends 'r_layout.html'%}
+
+{% block body %}
+<div class="container pt-5">
+  <h1 class="text-center rp_title">各部门投诉简报</h1>
+    {% from "r_includes/r_formhelpers.html" import render_field %}
+ <div class="jumbotron rp_reports_bg h-100">
+    <form action="" method="post" class="form-inline">
+        <div class="form-group mb-2">
+            <h5>请选择一个时间段: </h5>
+        </div>
+        <div class="form-group mx-4 mb-2">
+            {{render_field(dateform.start_date, class_="form-control")}}
+        </div>
+        <div class="form-group mx-3 mb-2">
+            {{render_field(dateform.end_date, class_="form-control")}}
+        </div>
+        <div class="form-group mx-2">
+        <input type="submit" class="btn btn-primary" value="生成报告">
+        </div>
+    </form>
+     <p class="font-weight-light text-danger font-italic">开始日期必须早于或等于结束日期</p>
+     <a href="/report" class="btn btn-warning pull-right">返回报告主页</a>
+ </div>
+</div>
+
+{% if summery %}
+<div class="container pt-2">
+ <div class="jumbotron rp_reports_bg h-100">
+     <table class="table table-hover table-striped">
+      <thead>
+        <tr>
+          <th scope="col">部门</th>
+          <th scope="col">问题数量</th>
+          <th scope="col">投诉问题汇总</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for key, value in num.items()%}
+        {% if value != 0 %}
+            <tr>
+                <th scope="row">{{ key|e }}</th>
+                <td>{{ value|e }}</td>
+                {% if summery[key]|length > 0 %}
+                    <td>
+                        {% for s in summery[key]%}
+                            <p>
+                                <span class="font-weight-bold">问题：</span>
+                                <span class="">{{s.label}}</span> (
+                                <span class="text-info">Case#：{{s.qc_num}}</span>)
+                            </p>
+                        {% endfor %}
+                    </td>
+                {% else %}
+                    <td class="font-italic">(此为部门顶级标签)</td>
+                {% endif %}
+            </tr>
+        {% endif %}
+      {% endfor %}
+      </tbody>
+     </table>
+ </div>
+</div>
+{% endif %}
+{% endblock %}

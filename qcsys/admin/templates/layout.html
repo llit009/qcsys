@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>UV QC</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('admin.static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('admin.static', filename='css/style.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('admin.static', filename='css/jquery-ui.min.css')}}">
+</head>
+<body>
+
+    {% include 'includes/_navbar.html' %}
+    <div class="container-fluid">
+        <div class="row" style="padding-right:10px;">
+            <div class="col-sm-2 col-md-1 col-lg-1" style="padding-left:0px;">
+               {% include 'includes/_sidebar.html' %}
+            </div>
+            <div id="main_con">
+                {% include 'includes/_messages.html' %}
+                {% block body %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js')}}" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}" ></script>
+    <script src="{{ url_for('admin.static', filename='js/sidebar.js')}}" ></script>
+    <script src="{{ url_for('static', filename='js/jquery-ui.min.js')}}" ></script>
+    <script src="{{ url_for('admin.static', filename='js/ajax.js')}}" ></script>
+    <script src="{{ url_for('admin.static', filename='js/utility.js')}}" ></script>
+    <script>
+        $(function() {
+            $("#autocomplete").autocomplete({
+                source:function(request, response) {
+                    $.getJSON("{{url_for('admin.index')}}",{
+                        q: request.term, // in flask, "q" will be the argument to look for using request.args
+                    }, function(data) {
+                        console.log(data.matching_result);
+                        response(data.matching_result); // matching_results from jsonify
+                    });
+                },
+                minLength: 1,
+                select: function(event, ui) {
+                    console.log(ui.item.value); // not in your question, but might help later
+                }
+            });
+        })
+
+        function off() {
+            document.getElementById("overlay").style.display = "none";
+        }
+    </script>
+</body>
+</html>

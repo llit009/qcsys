@@ -1,0 +1,123 @@
+{% extends 'r_layout.html'%}
+
+{% block body %}
+<div class="container pt-5">
+  <h1 class="text-center rp_title">统计图表</h1>
+    {% from "r_includes/r_formhelpers.html" import render_field %}
+ <div class="jumbotron rp_reports_bg h-100">
+    <form action="" method="post" class="form-inline">
+        <div class="form-group mb-2">
+            <h5>请选择需要查看的周期: </h5>
+        </div>
+        <div class="form-group mx-3 mb-2">
+            {{render_field(dateform.year, class_="form-control")}}
+        </div>
+        <div class="form-group mx-2 mb-2">
+            {{render_field(dateform.period, class_="form-control")}}
+        </div>
+        <div class="form-group mx-3 mb-2">
+            {{render_field(dateform.data_type, class_="form-control")}}
+        </div>
+        <div class="form-group mx-4 mb-2">
+        <input type="submit" class="btn btn-primary" value="生成报告">
+        </div>
+    </form>
+     <a href="/report" class="btn btn-warning pull-right">返回报告主页</a>
+ </div>
+</div>
+
+{% if stc_data %}
+<div class="container pt-3" style="position: relative; height:30vh; width:60vw">
+    <div class="row">
+        <div class="col-sm-2 col-md-2 mh-100"></div>
+        <div class="col-sm-8 col-md-8 mh-100" style="position: relative; height:50vh; width:110vw">
+            <canvas id="dept_chart" width="300" height="150"></canvas>
+        </div>
+        <div class="col-sm-2 col-md-2 mh-100"></div>
+    </div>
+    <hr>
+</div>
+
+<script>
+
+var randomScalingFactor_255 = function(){ return Math.round(Math.random()*230)};
+
+
+function createColor(list){
+    var color_list = [];
+    for (i = 0; i < list.length; i++){
+        color_list.push("rgba(" + randomScalingFactor_255() + "," + randomScalingFactor_255() + "," + randomScalingFactor_255() + ",0.9)");
+    }
+    return color_list;
+}
+
+function createDataset(list, colorlist){
+    var d_datelist = []
+    var set = []
+    for (i = 0; i < list.length; i++){
+            d_datelist.push(list[i]['total'])
+          }
+        set.push(
+                {
+                    label: '{{ {"case_count": "投诉数量", "refund": "退款金额"}[legend] | default("待输入") }}',
+                    data: d_datelist,
+                    backgroundColor: colorlist,
+                    borderColor: colorlist,
+                    borderWidth: 2,
+                    pointRadius: 8,
+                    fill: false,
+                    pointHoverRadius: 10
+                }
+        )
+    return set
+}
+
+function createConfig(labellist, datasetlist){
+    return {
+        type: 'line',
+        data: {
+            labels: labellist,
+            datasets: datasetlist
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            tooltips: {
+					mode: 'index',
+					intersect: false,
+			},
+			elements: {
+                point: {
+                    pointStyle: 'rectRot'
+                },
+                line: {
+                    tension: 0
+                }
+			},
+			scales: {
+					yAxes: [{
+						ticks: {
+							suggestedMin: 1,
+							suggestedMax: 20,
+							beginAtZero: true
+						}
+					}]
+				}
+        },
+    };
+}
+
+window.onload = function() {
+    var ctx_dpt = document.getElementById('dept_chart').getContext('2d');
+    var linecolor = "rgba(" + randomScalingFactor_255() + "," + randomScalingFactor_255() + "," + randomScalingFactor_255() + ",0.9)"
+    var stc_data_list = {{stc_data|safe}}
+    var lists = createDataset(stc_data_list, linecolor)
+
+    config_dpt = createConfig({{labels|safe}}, lists);
+    window.myPie = new Chart(ctx_dpt, config_dpt);
+
+};
+</script>
+
+{% endif %}
+{% endblock %}

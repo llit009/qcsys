@@ -1,0 +1,95 @@
+{% extends 'layout.html'%}
+
+{% block body %}
+<h3 class="text-primary font-weight-bold">案例 #{{qc_num}}</h3>
+<hr class="my-4 style1">
+{% from "includes/_caseformhelper.html" import render_field %}
+<form action="" method="post">
+    <h4 class="text-primary">投诉基本信息</h4>
+    <hr class="my-2 style2">
+    <div class="form-group row">
+      {{render_field(basic.qc_num, class_="form-control", readonly=true)}}
+  </div>
+    <div class="form-group row be_requested">
+      {{render_field(basic.source, class_="form-control")}}
+  </div>
+    <div class="form-group row">
+      {{render_field(basic.source_subject, class_="form-control")}}
+  </div>
+    <div class="form-group row">
+      {{render_field(basic.content, class_="form-control")}}
+  </div>
+  <div class="form-group row">
+      {{render_field(basic.ivsg_result, class_="form-control")}}
+  </div>
+    <hr class="my-4">
+    <h4 class="text-primary">订单信息</h4>
+    <hr class="my-2 style2">
+  <div class="form-group row be_requested">
+      {{render_field(order.agent, class_="form-control")}}
+  </div>
+    <div class="form-group row be_requested">
+      {{render_field(order.order_num, class_="form-control", placeholder="test")}}
+  </div>
+    <div class="form-group row be_requested">
+      {{render_field(order.invoice_num, class_="form-control")}}
+  </div>
+    <div class="form-group row be_requested">
+      {{render_field(order.dept_date, class_="form-control", id="dept_datepicker")}}
+  </div>
+    <div class="form-group row be_requested">
+      {{render_field(order.rm_num, class_="form-control")}}
+  </div>
+     <div class="form-group row be_requested">
+      {{render_field(order.tour_code, class_="form-control")}}
+  </div>
+     <div class="form-group row be_requested">
+      {{render_field(order.group_code, class_="form-control")}}
+  </div>
+    <div class="form-group row be_requested">
+      {{render_field(order.pax, class_="form-control")}}
+  </div>
+    <div class="form-group row">
+      {{render_field(order.tour_guide, class_="form-control")}}
+  </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label font-weight-bold">其他相关人员</label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+          <input type="text" id="item-username" class="form-control" placeholder="username" aria-describedby="basic-addon2">
+          <div class="input-group-append">
+            <button class="btn btn-info" type="button" id="submitbt">添加人员</button>
+          </div>
+        </div>
+        <div class="card " style="width: 45rem;">
+          <div class="card-body" id="items">
+              {% if staffs %}
+              {% for staff in staffs%}
+                {%if staff != ''%}
+                    <span class="badge badge-info label_sizing m-1">{{staff}}
+                        <input type="hidden" name="handles[]" value="{{staff}};">
+                    </span>
+                {% endif %}
+              {% endfor %}
+              {% endif %}
+          </div>
+        </div>
+      </div>
+     </div>
+    <hr class="my-4">
+    <h4 class="text-primary">修改备注</h4>
+    <hr class="my-2 style2">
+    <textarea class="form-control" id="edit-case-message" name="e_case_msg"></textarea>
+   <hr class="my-4">
+  <div class="form-group row mx-auto">
+    <div class="col-sm-5">
+      <input type="submit" class="btn btn-primary btn-block" value="Submit">
+    </div>
+      <div class="col-sm-5">
+          <a href="/admin/caselist" class="btn btn-danger btn-block">返回</a>
+      </div>
+  </div>
+</form>
+<hr class="my-4">
+<br>
+{% endblock %}

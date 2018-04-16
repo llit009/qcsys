@@ -1,0 +1,168 @@
+{% extends 'r_layout.html'%}
+
+{% block body %}
+<div class="container pt-5">
+  <h1 class="text-center rp_title">统计图表</h1>
+    {% from "r_includes/r_formhelpers.html" import render_field %}
+ <div class="jumbotron rp_reports_bg h-100">
+    <form action="" method="post" class="form-inline">
+        <div class="form-group mb-2">
+            <h5>请选择一个时间段: </h5>
+        </div>
+        <div class="form-group mx-4 mb-2">
+            {{render_field(dateform.start_date, class_="form-control")}}
+        </div>
+        <div class="form-group mx-3 mb-2">
+            {{render_field(dateform.end_date, class_="form-control")}}
+        </div>
+        <div class="form-group mx-2">
+        <input type="submit" class="btn btn-primary" value="生成报告">
+        </div>
+    </form>
+     <p class="font-weight-light text-danger font-italic">开始日期必须早于或等于结束日期</p>
+     <a href="/report" class="btn btn-warning pull-right">返回报告主页</a>
+ </div>
+</div>
+
+{% if total %}
+<div class="container pt-3" style="position: relative; height:55vh; width:110vw">
+    <div class="row">
+        <div class="col-sm-5 col-md-5 mh-100">
+            <table class="table table-sm">
+                <thead>
+                    <th ><pre><h4 class="text-primary">{{title}} 数据概要</h4></pre></th>
+                </thead>
+                <tbody>
+                    <tr>
+                      <th scope="row" class="text-primary">投诉案例总数：</th>
+                      <td class="font-weight-bold">{{total.case_total}}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-primary">案例涉及问题总数：</th>
+                      <td class="font-weight-bold">{{total.label_total}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-2 col-md-2 mh-100"></div>
+        <div class="col-sm-5 col-md-5 mh-100">
+            <table class="table table-sm">
+                <thead>
+                    <th ><pre><h4 class="text-primary">事业部统计</h4></pre></th>
+                </thead>
+                <tbody>
+                    <tr>
+                      <th scope="row" class="text-primary">EC</th>
+                      <td class="font-weight-bold">{{dpt_total.EC}}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-primary">Local：</th>
+                      <td class="font-weight-bold">{{dpt_total.Local}}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" class="text-primary">ECI：</th>
+                      <td class="font-weight-bold">{{dpt_total.ECI}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-12 col-md-12 mh-100"><hr><br></div>
+        <div class="col-sm-6 col-md-6 mh-100">
+            <table class="table table-sm">
+                <thead>
+                    <th ><h5 class="text-info font-weight-bold">各部门数据统计</h5></th>
+                </thead>
+                <tbody>
+                {% for i in range(dpt_dict.name|length)%}
+                    <tr>
+                      <th scope="row" class="font-weight-bold">{{dpt_dict.name[i]}}</th>
+                      <td class="font-weight-bold">{{dpt_dict.num[i]}}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-6 col-md-6 mh-100">
+            <canvas id="dept_chart" width="200" height="200"></canvas>
+        </div>
+
+        <div class="col-sm-12 col-md-12 mh-100"><hr><br></div>
+        <div class="col-sm-6 col-md-6 mh-100">
+            <table class="table table-sm">
+                <thead>
+                    <th ><h5 class="text-info font-weight-bold">代理商数据统计</h5></th>
+                </thead>
+                <tbody>
+                    {% for i in range(agt_dict.name|length)%}
+                        <tr>
+                          <th scope="row" class="font-weight-bold">{{agt_dict.name[i]}}</th>
+                          <td class="font-weight-bold">{{agt_dict.num[i]}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-6 col-md-6 mh-100">
+            <canvas id="agent_chart" width="200" height="200"></canvas>
+        </div>
+    </div>
+    <hr>
+</div>
+
+<script>
+
+var randomScalingFactor_255 = function(){ return Math.round(Math.random()*220)};
+
+
+function createColor(list){
+    var color_list = [];
+    for (i = 0; i < list.length; i++){
+        color_list.push("rgba(" + randomScalingFactor_255() + "," + randomScalingFactor_255() + "," + randomScalingFactor_255() + ",0.6)");
+    }
+    return color_list;
+}
+
+function createConfig(name, num, color){
+    return {
+        type: 'pie',
+        data: {
+            labels: name,
+            datasets: [{
+                label: '# of Votes',
+                data: num,
+                backgroundColor: color,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                fontSize: 18,
+                fontColor: 'rgba(71, 164, 173, 1)',
+                text: '{{title}}'
+            },
+            pieceLabel: {
+              render: 'percentage',
+              fontColor: 'black',
+              precision: 2
+            },
+        },
+    };
+}
+
+window.onload = function() {
+    var ctx_dpt = document.getElementById('dept_chart').getContext('2d');
+    color_dpt = createColor({{dpt_dict.name|safe}})
+    config_dpt = createConfig({{dpt_dict.name|safe}},{{dpt_dict.num|safe}},color_dpt);
+    window.myPie = new Chart(ctx_dpt, config_dpt);
+
+    var ctx_agt = document.getElementById('agent_chart').getContext('2d');
+    color_agt = createColor({{agt_dict.name|safe}})
+    config_agt = createConfig({{agt_dict.name|safe}},{{agt_dict.num|safe}},color_agt);
+    window.myPie = new Chart(ctx_agt, config_agt);
+};
+</script>
+
+{% endif %}
+{% endblock %}
